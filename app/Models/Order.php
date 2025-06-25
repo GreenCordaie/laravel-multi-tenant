@@ -1,14 +1,32 @@
 <?php
+
 namespace App\Models;
+
+// --- AJOUTS ---
+use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+// --- FIN AJOUTS ---
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    use HasFactory;
+    // --- AJOUT : Le trait pour la multitenancy ---
+  
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
+        // --- AJOUTS ---
+        'tenant_id',
+        'return_reason_id',
+        // --- FIN AJOUTS ---
+
         'order_number',
         'user_id',
         'total',
@@ -33,7 +51,16 @@ class Order extends Model
         'paid_at',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
     protected $casts = [
+        // --- AJOUTS : Le "casting" des Enums ---
+        'status' => OrderStatus::class,
+        'payment_status' => PaymentStatus::class,
+        // --- FIN AJOUTS ---
         'paid_at' => 'datetime',
     ];
 
@@ -45,5 +72,11 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    // --- AJOUT : La relation pour la raison du retour ---
+    public function returnReason(): BelongsTo
+    {
+        return $this->belongsTo(ReturnReason::class);
     }
 }

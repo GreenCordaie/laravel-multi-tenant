@@ -12,6 +12,9 @@ use Inertia\Inertia;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -35,6 +38,7 @@ Route::middleware([
 
     // Product routes
     Route::resource('products', ProductController::class)->only(['show']);
+    
 
     // Cart routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
